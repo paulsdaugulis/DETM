@@ -137,7 +137,7 @@ with open(emb_path, 'rb') as f:
         line = l.decode().split()
         word = line[0]
         if word in vocab:
-            vect = np.array(line[1:]).astype(np.float)
+            vect = np.array(line[1:]).astype(float)
             vectors[word] = vect
 embeddings = np.zeros((vocab_size, args.emb_size))
 words_found = 0
@@ -259,7 +259,9 @@ def visualize():
         print('\n')
         print('#'*100)
         print('Visualize topics...')
-        times = [0, 10, 40]
+        times = [t for t in [0, 10, 40] if t < args.num_times]
+        if not times:
+            times = [0]
         topics_words = []
         for k in range(args.num_topics):
             for t in times:
@@ -272,14 +274,20 @@ def visualize():
         print('\n')
         print('Visualize word embeddings ...')
         queries = ['economic', 'assembly', 'security', 'management', 'debt', 'rights',  'africa']
-        try:
-            embeddings = model.rho.weight  # Vocab_size x E
-        except:
-            embeddings = model.rho         # Vocab_size x E
-        neighbors = []
-        for word in queries:
-            print('word: {} .. neighbors: {}'.format(
-                word, nearest_neighbors(word, embeddings, vocab, args.num_words)))
+        available_queries = [word for word in queries if word in vocab]
+        missing_queries = [word for word in queries if word not in vocab]
+        if missing_queries:
+            print('Skipping OOV query words not present in this dataset vocabulary: {}'.format(missing_queries))
+        if not available_queries:
+            print('No query words available in current vocabulary; skipping nearest-neighbor visualization.')
+        else:
+            try:
+                embeddings = model.rho.weight  # Vocab_size x E
+            except AttributeError:
+                embeddings = model.rho         # Vocab_size x E
+            for word in available_queries:
+                print('word: {} .. neighbors: {}'.format(
+                    word, nearest_neighbors(word, embeddings, vocab, args.num_words)))
         print('#'*100)
 
         # print('\n')
