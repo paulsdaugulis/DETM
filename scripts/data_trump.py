@@ -203,29 +203,51 @@ def main():
     with open(os.path.join(path_save, "timestamps.pkl"), "wb") as f:
         pickle.dump(time_list, f)
 
-    savemat(os.path.join(path_save, "bow_tr_timestamps"), {"timestamps": timestamps_tr}, do_compression=True)
-    savemat(os.path.join(path_save, "bow_ts_timestamps"), {"timestamps": timestamps_ts}, do_compression=True)
-    savemat(os.path.join(path_save, "bow_va_timestamps"), {"timestamps": timestamps_va}, do_compression=True)
+    savemat(os.path.join(path_save, "bow_tr_timestamps.mat"), {"timestamps": timestamps_tr}, do_compression=True)
+    savemat(os.path.join(path_save, "bow_ts_timestamps.mat"), {"timestamps": timestamps_ts}, do_compression=True)
+    savemat(os.path.join(path_save, "bow_va_timestamps.mat"), {"timestamps": timestamps_va}, do_compression=True)
 
     bow_tr_tokens, bow_tr_counts = split_bow(bow_tr, n_docs_tr)
-    savemat(os.path.join(path_save, "bow_tr_tokens"), {"tokens": bow_tr_tokens}, do_compression=True)
-    savemat(os.path.join(path_save, "bow_tr_counts"), {"counts": bow_tr_counts}, do_compression=True)
+    savemat(os.path.join(path_save, "bow_tr_tokens.mat"), {"tokens": bow_tr_tokens}, do_compression=True)
+    savemat(os.path.join(path_save, "bow_tr_counts.mat"), {"counts": bow_tr_counts}, do_compression=True)
 
     bow_ts_tokens, bow_ts_counts = split_bow(bow_ts, n_docs_ts)
-    savemat(os.path.join(path_save, "bow_ts_tokens"), {"tokens": bow_ts_tokens}, do_compression=True)
-    savemat(os.path.join(path_save, "bow_ts_counts"), {"counts": bow_ts_counts}, do_compression=True)
+    savemat(os.path.join(path_save, "bow_ts_tokens.mat"), {"tokens": bow_ts_tokens}, do_compression=True)
+    savemat(os.path.join(path_save, "bow_ts_counts.mat"), {"counts": bow_ts_counts}, do_compression=True)
 
     bow_ts_h1_tokens, bow_ts_h1_counts = split_bow(bow_ts_h1, n_docs_ts_h1)
-    savemat(os.path.join(path_save, "bow_ts_h1_tokens"), {"tokens": bow_ts_h1_tokens}, do_compression=True)
-    savemat(os.path.join(path_save, "bow_ts_h1_counts"), {"counts": bow_ts_h1_counts}, do_compression=True)
+    savemat(os.path.join(path_save, "bow_ts_h1_tokens.mat"), {"tokens": bow_ts_h1_tokens}, do_compression=True)
+    savemat(os.path.join(path_save, "bow_ts_h1_counts.mat"), {"counts": bow_ts_h1_counts}, do_compression=True)
 
     bow_ts_h2_tokens, bow_ts_h2_counts = split_bow(bow_ts_h2, n_docs_ts_h2)
-    savemat(os.path.join(path_save, "bow_ts_h2_tokens"), {"tokens": bow_ts_h2_tokens}, do_compression=True)
-    savemat(os.path.join(path_save, "bow_ts_h2_counts"), {"counts": bow_ts_h2_counts}, do_compression=True)
+    savemat(os.path.join(path_save, "bow_ts_h2_tokens.mat"), {"tokens": bow_ts_h2_tokens}, do_compression=True)
+    savemat(os.path.join(path_save, "bow_ts_h2_counts.mat"), {"counts": bow_ts_h2_counts}, do_compression=True)
 
     bow_va_tokens, bow_va_counts = split_bow(bow_va, n_docs_va)
-    savemat(os.path.join(path_save, "bow_va_tokens"), {"tokens": bow_va_tokens}, do_compression=True)
-    savemat(os.path.join(path_save, "bow_va_counts"), {"counts": bow_va_counts}, do_compression=True)
+    savemat(os.path.join(path_save, "bow_va_tokens.mat"), {"tokens": bow_va_tokens}, do_compression=True)
+    savemat(os.path.join(path_save, "bow_va_counts.mat"), {"counts": bow_va_counts}, do_compression=True)
+
+
+    expected_files = [
+        "vocab.pkl",
+        "timestamps.pkl",
+        "bow_tr_tokens.mat",
+        "bow_tr_counts.mat",
+        "bow_tr_timestamps.mat",
+        "bow_va_tokens.mat",
+        "bow_va_counts.mat",
+        "bow_va_timestamps.mat",
+        "bow_ts_tokens.mat",
+        "bow_ts_counts.mat",
+        "bow_ts_timestamps.mat",
+        "bow_ts_h1_tokens.mat",
+        "bow_ts_h1_counts.mat",
+        "bow_ts_h2_tokens.mat",
+        "bow_ts_h2_counts.mat",
+    ]
+    missing = [f for f in expected_files if not os.path.exists(os.path.join(path_save, f))]
+    if missing:
+        raise RuntimeError("Preprocessing finished but files are missing: {}".format(missing))
 
     print(f"Saved DETM-ready Trump dataset to: {path_save}")
     print(f"Documents: train={n_docs_tr}, valid={n_docs_va}, test={n_docs_ts}")

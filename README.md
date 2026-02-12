@@ -114,3 +114,28 @@ After training, run with `--mode eval --load_from <checkpoint_path>`.
 - BERTopic works on sentence/document embeddings; DETM here works on bag-of-words + **word embeddings**.
 - `num_topics` and `min_df` are the first hyperparameters to tune.
 - Time granularity is controlled in `scripts/data_trump.py` (currently year-month bins).
+
+
+### Troubleshooting (Colab)
+
+If training fails with:
+
+```
+FileNotFoundError: ... data/trump/min_df_15/bow_tr_tokens.mat
+```
+
+it means preprocessing did not finish or wrote to a different location. Run:
+
+```bash
+python scripts/data_trump.py --output_dir data/trump --min_df 15 --max_df 0.7
+ls -lh data/trump/min_df_15 | head -n 30
+```
+
+You should see at least these files:
+- `bow_tr_tokens.mat`, `bow_tr_counts.mat`, `bow_tr_timestamps.mat`
+- `bow_va_tokens.mat`, `bow_va_counts.mat`, `bow_va_timestamps.mat`
+- `bow_ts_tokens.mat`, `bow_ts_counts.mat`, `bow_ts_timestamps.mat`
+- `bow_ts_h1_tokens.mat`, `bow_ts_h1_counts.mat`, `bow_ts_h2_tokens.mat`, `bow_ts_h2_counts.mat`
+- `vocab.pkl`, `timestamps.pkl`
+
+If you change `--min_df`, make sure the same value is used both in preprocessing and training.
