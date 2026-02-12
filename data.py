@@ -7,6 +7,15 @@ import scipy.io
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+
+def _require_exists(file_path):
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(
+            "Missing required preprocessed file: {}\n"
+            "Make sure dataset preprocessing completed successfully and produced .mat files.\n"
+            "For Trump tweets, run: python scripts/data_trump.py --output_dir data/trump --min_df <VALUE>".format(file_path)
+        )
+
 def _fetch(path, name):
     if name == 'train':
         token_file = os.path.join(path, 'bow_tr_tokens.mat')
@@ -44,6 +53,9 @@ def _fetch_temporal(path, name):
         token_file = os.path.join(path, 'bow_ts_tokens.mat')
         count_file = os.path.join(path, 'bow_ts_counts.mat')
         time_file = os.path.join(path, 'bow_ts_timestamps.mat')
+    _require_exists(token_file)
+    _require_exists(count_file)
+    _require_exists(time_file)
     tokens = scipy.io.loadmat(token_file)['tokens'].squeeze()
     counts = scipy.io.loadmat(count_file)['counts'].squeeze()
     times = scipy.io.loadmat(time_file)['timestamps'].squeeze()
@@ -52,6 +64,10 @@ def _fetch_temporal(path, name):
         count_1_file = os.path.join(path, 'bow_ts_h1_counts.mat')
         token_2_file = os.path.join(path, 'bow_ts_h2_tokens.mat')
         count_2_file = os.path.join(path, 'bow_ts_h2_counts.mat')
+        _require_exists(token_1_file)
+        _require_exists(count_1_file)
+        _require_exists(token_2_file)
+        _require_exists(count_2_file)
         tokens_1 = scipy.io.loadmat(token_1_file)['tokens'].squeeze()
         counts_1 = scipy.io.loadmat(count_1_file)['counts'].squeeze()
         tokens_2 = scipy.io.loadmat(token_2_file)['tokens'].squeeze()

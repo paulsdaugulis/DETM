@@ -207,7 +207,7 @@ class DETM(nn.Module):
         return nelbo, nll, kl_alpha, kl_eta, kl_theta
 
     def init_hidden(self):
-        """Initializes the first hidden state of the RNN used as inference network for \eta.
+        """Initializes the first hidden state of the RNN used as inference network for eta.
         """
         weight = next(self.parameters())
         nlayers = self.eta_nlayers
