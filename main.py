@@ -273,7 +273,7 @@ def visualize():
 
         print('\n')
         print('Visualize word embeddings ...')
-        queries = ['economic', 'assembly', 'security', 'management', 'debt', 'rights',  'africa']
+        queries = ['election', 'media', 'china', 'border', 'jobs', 'democrats']
         available_queries = [word for word in queries if word in vocab]
         missing_queries = [word for word in queries if word not in vocab]
         if missing_queries:
