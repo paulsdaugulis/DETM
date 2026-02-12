@@ -137,7 +137,7 @@ with open(emb_path, 'rb') as f:
         line = l.decode().split()
         word = line[0]
         if word in vocab:
-            vect = np.array(line[1:]).astype(np.float)
+            vect = np.array(line[1:]).astype(float)
             vectors[word] = vect
 embeddings = np.zeros((vocab_size, args.emb_size))
 words_found = 0
